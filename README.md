@@ -1,14 +1,57 @@
-# gradient_bottom_navigation_bar
+# Gradient Bottom Navigation Bar
 
-A material Bottom Navigation Bar with a gradient option.
+This package allows you to add a gradient to the standard Material Bottom Navigation Bar.
 
 ## Getting Started
 
-This project is a starting point for a Dart
-[package](https://flutter.io/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+First, add this line in your project's ` pubspec.yaml `
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.io/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+```yml
+dependencies:
+  ...
+  gradient_bottom_navigation_bar: ^1.0.0
+```
+
+For help getting started with Flutter, view the online
+[documentation](https://flutter.io/).
+
+## Usage examples
+Import `gradient_bottom_navigation_bar.dart` in your desired class
+
+```dart
+import 'package:gradient_bottom_navigation_bar/gradient_bottom_navigation_bar.dart';
+
+...
+```
+
+### Basic implementation
+
+```dart
+@override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Example'),
+      ),
+      body: Center(
+        child: _widgetOptions.elementAt(_selectedIndex),
+      ),
+      bottomNavigationBar: GradientBottomNavigationBar(
+        backgroundColorStart: Colors.purple,
+        backgroundColorEnd: Colors.deepOrange,
+        items: <BottomNavigationBarItem>[
+          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
+          BottomNavigationBarItem(icon: Icon(Icons.business), title: Text('Business')),
+          BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('School')),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
+  }
+```
+
+You can also check the [example](https://github.com/JTorrus/GradientBottomNavigationBar/tree/master/example) for additional information.
+
+## Screenshots
+![Example](https://i.imgur.com/ALh6vY3.png)

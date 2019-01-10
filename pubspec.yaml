@@ -1,8 +1,8 @@
 name: gradient_bottom_navigation_bar
 description: A material Bottom Navigation Bar with a gradient option.
-version: 0.0.1
-author:
-homepage:
+version: 1.0.0
+author: Javier Torrus <jtorrusgalindo@gmail.com>
+homepage: https://github.com/JTorrus/GradientBottomNavigationBar
 
 environment:
   sdk: ">=2.0.0-dev.68.0 <3.0.0"

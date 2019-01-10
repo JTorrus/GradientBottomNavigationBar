@@ -7,10 +7,9 @@ library gradient_bottom_navigation_bar;
 import 'dart:collection' show Queue;
 import 'dart:math' as math;
 
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:vector_math/vector_math_64.dart' show Vector3;
-
-import 'package:flutter/material.dart';
 
 const double _kActiveFontSize = 14.0;
 const double _kInactiveFontSize = 12.0;
@@ -555,14 +554,7 @@ class _GradientBottomNavigationBarState
     // Labels apply up to _bottomMargin padding. Remainder is media padding.
     final double additionalBottomPadding =
         math.max(MediaQuery.of(context).padding.bottom - _kBottomMargin, 0.0);
-    Color backgroundColor;
-    switch (widget.type) {
-      case BottomNavigationBarType.fixed:
-        break;
-      case BottomNavigationBarType.shifting:
-        backgroundColor = _backgroundColor;
-        break;
-    }
+
     return Semantics(
       container: true,
       explicitChildNodes: true,

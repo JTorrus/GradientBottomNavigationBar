@@ -51,5 +51,7 @@ import 'package:gradient_bottom_navigation_bar/gradient_bottom_navigation_bar.da
   }
 ```
 
+You can also check the [example](https://github.com/JTorrus/GradientBottomNavigationBar/tree/master/example) for additional information.
+
 ## Screenshots
 ![Example](https://i.imgur.com/ALh6vY3.png)

@@ -111,6 +111,8 @@ class GradientBottomNavigationBar extends StatefulWidget {
   ///
   /// The length of [items] must be at least two and each item's icon and title must be not null.
   ///
+  /// It is required to specify a color for both [backgroundColorStart} and [backgroundColorEnd].
+  ///
   /// If [type] is null then [BottomNavigationBarType.fixed] is used when there
   /// are two or three [items], [BottomNavigationBarType.shifting] otherwise.
   ///
@@ -127,15 +129,20 @@ class GradientBottomNavigationBar extends StatefulWidget {
     BottomNavigationBarType type,
     this.fixedColor,
     this.iconSize = 24.0,
-  }) : assert(items != null),
+  })  : assert(items != null),
         assert(items.length >= 2),
+        assert(backgroundColorStart != null),
+        assert(backgroundColorEnd != null),
         assert(
-        items.every((BottomNavigationBarItem item) => item.title != null) == true,
-        'Every item must have a non-null title',
-        ),
+            items.every((BottomNavigationBarItem item) => item.title != null) ==
+                true,
+            'Every item must have a non-null title',),
         assert(0 <= currentIndex && currentIndex < items.length),
         assert(iconSize != null),
-        type = type ?? (items.length <= 3 ? BottomNavigationBarType.fixed : BottomNavigationBarType.shifting),
+        type = type ??
+            (items.length <= 3
+                ? BottomNavigationBarType.fixed
+                : BottomNavigationBarType.shifting),
         super(key: key);
 
   /// The interactive items laid out within the bottom navigation bar where each item has an icon and title.
@@ -157,7 +164,10 @@ class GradientBottomNavigationBar extends StatefulWidget {
   /// of different types.
   final BottomNavigationBarType type;
 
+  /// Defines the start color shown in the [LinearGradient]
   final Color backgroundColorStart;
+
+  /// Defines the ending color shown in the [LinearGradient]
   final Color backgroundColorEnd;
 
   /// The color of the selected item when bottom navigation bar is
@@ -175,23 +185,24 @@ class GradientBottomNavigationBar extends StatefulWidget {
   final double iconSize;
 
   @override
-  _GradientBottomNavigationBarState createState() => _GradientBottomNavigationBarState();
+  _GradientBottomNavigationBarState createState() =>
+      _GradientBottomNavigationBarState();
 }
 
 // This represents a single tile in the bottom navigation bar. It is intended
 // to go into a flex container.
 class _BottomNavigationTile extends StatelessWidget {
   const _BottomNavigationTile(
-      this.type,
-      this.item,
-      this.animation,
-      this.iconSize, {
-        this.onTap,
-        this.colorTween,
-        this.flex,
-        this.selected = false,
-        this.indexLabel,
-      }) : assert(selected != null);
+    this.type,
+    this.item,
+    this.animation,
+    this.iconSize, {
+    this.onTap,
+    this.colorTween,
+    this.flex,
+    this.selected = false,
+    this.indexLabel,
+  }) : assert(selected != null);
 
   final BottomNavigationBarType type;
   final BottomNavigationBarItem item;
@@ -346,7 +357,8 @@ class _BottomNavigationTile extends StatelessWidget {
   }
 }
 
-class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBar> with TickerProviderStateMixin {
+class _GradientBottomNavigationBarState
+    extends State<GradientBottomNavigationBar> with TickerProviderStateMixin {
   List<AnimationController> _controllers = <AnimationController>[];
   List<CurvedAnimation> _animations;
 
@@ -357,27 +369,28 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
   // animation is complete.
   Color _backgroundColor;
 
-  static final Animatable<double> _flexTween = Tween<double>(begin: 1.0, end: 1.5);
+  static final Animatable<double> _flexTween =
+      Tween<double>(begin: 1.0, end: 1.5);
 
   void _resetState() {
-    for (AnimationController controller in _controllers)
-      controller.dispose();
-    for (_Circle circle in _circles)
-      circle.dispose();
+    for (AnimationController controller in _controllers) controller.dispose();
+    for (_Circle circle in _circles) circle.dispose();
     _circles.clear();
 
-    _controllers = List<AnimationController>.generate(widget.items.length, (int index) {
-    return AnimationController(
-    duration: kThemeAnimationDuration,
-    vsync: this,
-    )..addListener(_rebuild);
+    _controllers =
+        List<AnimationController>.generate(widget.items.length, (int index) {
+      return AnimationController(
+        duration: kThemeAnimationDuration,
+        vsync: this,
+      )..addListener(_rebuild);
     });
-    _animations = List<CurvedAnimation>.generate(widget.items.length, (int index) {
-    return CurvedAnimation(
-    parent: _controllers[index],
-    curve: Curves.fastOutSlowIn,
-    reverseCurve: Curves.fastOutSlowIn.flipped,
-    );
+    _animations =
+        List<CurvedAnimation>.generate(widget.items.length, (int index) {
+      return CurvedAnimation(
+        parent: _controllers[index],
+        curve: Curves.fastOutSlowIn,
+        reverseCurve: Curves.fastOutSlowIn.flipped,
+      );
     });
     _controllers[widget.currentIndex].value = 1.0;
     _backgroundColor = widget.items[widget.currentIndex].backgroundColor;
@@ -398,14 +411,13 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
 
   @override
   void dispose() {
-    for (AnimationController controller in _controllers)
-      controller.dispose();
-    for (_Circle circle in _circles)
-      circle.dispose();
+    for (AnimationController controller in _controllers) controller.dispose();
+    for (_Circle circle in _circles) circle.dispose();
     super.dispose();
   }
 
-  double _evaluateFlex(Animation<double> animation) => _flexTween.evaluate(animation);
+  double _evaluateFlex(Animation<double> animation) =>
+      _flexTween.evaluate(animation);
 
   void _pushCircle(int index) {
     if (widget.items[index].backgroundColor != null) {
@@ -416,22 +428,22 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
           color: widget.items[index].backgroundColor,
           vsync: this,
         )..controller.addStatusListener(
-              (AnimationStatus status) {
-            switch (status) {
-              case AnimationStatus.completed:
-                setState(() {
-                  final _Circle circle = _circles.removeFirst();
-                  _backgroundColor = circle.color;
-                  circle.dispose();
-                });
-                break;
-              case AnimationStatus.dismissed:
-              case AnimationStatus.forward:
-              case AnimationStatus.reverse:
-                break;
-            }
-          },
-        ),
+            (AnimationStatus status) {
+              switch (status) {
+                case AnimationStatus.completed:
+                  setState(() {
+                    final _Circle circle = _circles.removeFirst();
+                    _backgroundColor = circle.color;
+                    circle.dispose();
+                  });
+                  break;
+                case AnimationStatus.dismissed:
+                case AnimationStatus.forward:
+                case AnimationStatus.reverse:
+                  break;
+              }
+            },
+          ),
       );
     }
   }
@@ -463,7 +475,8 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
   }
 
   List<Widget> _createTiles() {
-    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    final MaterialLocalizations localizations =
+        MaterialLocalizations.of(context);
     assert(localizations != null);
     final List<Widget> children = <Widget>[];
     switch (widget.type) {
@@ -491,12 +504,12 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
               _animations[i],
               widget.iconSize,
               onTap: () {
-                if (widget.onTap != null)
-                  widget.onTap(i);
+                if (widget.onTap != null) widget.onTap(i);
               },
               colorTween: colorTween,
               selected: i == widget.currentIndex,
-              indexLabel: localizations.tabLabel(tabIndex: i + 1, tabCount: widget.items.length),
+              indexLabel: localizations.tabLabel(
+                  tabIndex: i + 1, tabCount: widget.items.length),
             ),
           );
         }
@@ -510,12 +523,12 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
               _animations[i],
               widget.iconSize,
               onTap: () {
-                if (widget.onTap != null)
-                  widget.onTap(i);
+                if (widget.onTap != null) widget.onTap(i);
               },
               flex: _evaluateFlex(_animations[i]),
               selected: i == widget.currentIndex,
-              indexLabel: localizations.tabLabel(tabIndex: i + 1, tabCount: widget.items.length),
+              indexLabel: localizations.tabLabel(
+                  tabIndex: i + 1, tabCount: widget.items.length),
             ),
           );
         }
@@ -540,7 +553,8 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
     assert(debugCheckHasMaterialLocalizations(context));
 
     // Labels apply up to _bottomMargin padding. Remainder is media padding.
-    final double additionalBottomPadding = math.max(MediaQuery.of(context).padding.bottom - _kBottomMargin, 0.0);
+    final double additionalBottomPadding =
+        math.max(MediaQuery.of(context).padding.bottom - _kBottomMargin, 0.0);
     Color backgroundColor;
     switch (widget.type) {
       case BottomNavigationBarType.fixed:
@@ -555,7 +569,8 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
       child: Stack(
         children: <Widget>[
           Positioned.fill(
-            child: Material( // Casts shadow.
+            child: Material(
+              // Casts shadow.
               elevation: 8.0,
               color: Color(0x00000000),
               child: Container(
@@ -574,7 +589,9 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
             ),
           ),
           ConstrainedBox(
-            constraints: BoxConstraints(minHeight: kBottomNavigationBarHeight + additionalBottomPadding),
+            constraints: BoxConstraints(
+                minHeight:
+                    kBottomNavigationBarHeight + additionalBottomPadding),
             child: Stack(
               children: <Widget>[
                 Positioned.fill(
@@ -585,7 +602,8 @@ class _GradientBottomNavigationBarState extends State<GradientBottomNavigationBa
                     ),
                   ),
                 ),
-                Material( // Splashes.
+                Material(
+                  // Splashes.
                   type: MaterialType.transparency,
                   child: Padding(
                     padding: EdgeInsets.only(bottom: additionalBottomPadding),
@@ -612,7 +630,7 @@ class _Circle {
     @required this.index,
     @required this.color,
     @required TickerProvider vsync,
-  }) : assert(state != null),
+  })  : assert(state != null),
         assert(index != null),
         assert(color != null) {
     controller = AnimationController(
@@ -636,15 +654,20 @@ class _Circle {
     double weightSum(Iterable<Animation<double>> animations) {
       // We're adding flex values instead of animation values to produce correct
       // ratios.
-      return animations.map<double>(state._evaluateFlex).fold<double>(0.0, (double sum, double value) => sum + value);
+      return animations
+          .map<double>(state._evaluateFlex)
+          .fold<double>(0.0, (double sum, double value) => sum + value);
     }
 
     final double allWeights = weightSum(state._animations);
     // These weights sum to the start edge of the indexed item.
-    final double leadingWeights = weightSum(state._animations.sublist(0, index));
+    final double leadingWeights =
+        weightSum(state._animations.sublist(0, index));
 
     // Add half of its flex value in order to get to the center.
-    return (leadingWeights + state._evaluateFlex(state._animations[index]) / 2.0) / allWeights;
+    return (leadingWeights +
+            state._evaluateFlex(state._animations[index]) / 2.0) /
+        allWeights;
   }
 
   void dispose() {
@@ -657,7 +680,7 @@ class _RadialPainter extends CustomPainter {
   _RadialPainter({
     @required this.circles,
     @required this.textDirection,
-  }) : assert(circles != null),
+  })  : assert(circles != null),
         assert(textDirection != null);
 
   final List<_Circle> circles;
@@ -675,15 +698,11 @@ class _RadialPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_RadialPainter oldPainter) {
-    if (textDirection != oldPainter.textDirection)
-      return true;
-    if (circles == oldPainter.circles)
-      return false;
-    if (circles.length != oldPainter.circles.length)
-      return true;
+    if (textDirection != oldPainter.textDirection) return true;
+    if (circles == oldPainter.circles) return false;
+    if (circles.length != oldPainter.circles.length) return true;
     for (int i = 0; i < circles.length; i += 1)
-      if (circles[i] != oldPainter.circles[i])
-        return true;
+      if (circles[i] != oldPainter.circles[i]) return true;
     return false;
   }
 
@@ -702,7 +721,8 @@ class _RadialPainter extends CustomPainter {
           leftFraction = circle.horizontalLeadingOffset;
           break;
       }
-      final Offset center = Offset(leftFraction * size.width, size.height / 2.0);
+      final Offset center =
+          Offset(leftFraction * size.width, size.height / 2.0);
       final Tween<double> radiusTween = Tween<double>(
         begin: 0.0,
         end: _maxRadius(center, size),
@@ -715,8 +735,3 @@ class _RadialPainter extends CustomPainter {
     }
   }
 }
-
-
-
-
-

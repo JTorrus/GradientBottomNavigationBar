@@ -1,4 +1,5 @@
 # Gradient Bottom Navigation Bar
+[![pub package](https://img.shields.io/pub/v/gradient_bottom_navigation_bar.svg)](https://pub.dartlang.org/packages/gradient_bottom_navigation_bar)
 
 This package allows you to add a gradient to the standard Material Bottom Navigation Bar.
 

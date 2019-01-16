@@ -10,7 +10,7 @@ First, add this line in your project's ` pubspec.yaml `
 ```yml
 dependencies:
   ...
-  gradient_bottom_navigation_bar: ^1.0.0
+  gradient_bottom_navigation_bar: ^1.0.0+1
 ```
 
 For help getting started with Flutter, view the online

@@ -1,3 +1,7 @@
+## [1.0.0+4] - 02/03/2019
+
+* README changes
+
 ## [1.0.0+3] - 02/03/2019.
 
 * Description updated with a better explanation.

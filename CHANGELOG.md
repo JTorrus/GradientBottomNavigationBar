@@ -1,3 +1,7 @@
+## [1.0.0+3] - 02/03/2019.
+
+* Description updated with a better explanation.
+
 ## [1.0.0+2] - 01/17/2019.
 
 * Dartdoc generation fix.

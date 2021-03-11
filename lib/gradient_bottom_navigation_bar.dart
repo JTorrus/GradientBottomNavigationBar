@@ -80,9 +80,9 @@ const double _kBottomMargin = 8.0;
 ///      ),
 ///      bottomNavigationBar: BottomNavigationBar(
 ///        items: <BottomNavigationBarItem>[
-///          BottomNavigationBarItem(icon: Icon(Icons.home), title: Text('Home')),
-///          BottomNavigationBarItem(icon: Icon(Icons.business), title: Text('Business')),
-///          BottomNavigationBarItem(icon: Icon(Icons.school), title: Text('School')),
+///          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+///          BottomNavigationBarItem(icon: Icon(Icons.business), label: 'Business'),
+///          BottomNavigationBarItem(icon: Icon(Icons.school), label: 'School'),
 ///        ],
 ///        currentIndex: _selectedIndex,
 ///        fixedColor: Colors.deepPurple,
@@ -108,7 +108,7 @@ class GradientBottomNavigationBar extends StatefulWidget {
   /// Creates a bottom navigation bar, typically used in a [Scaffold] where it
   /// is provided as the [Scaffold.bottomNavigationBar] argument.
   ///
-  /// The length of [items] must be at least two and each item's icon and title must be not null.
+  /// The length of [items] must be at least two and each item's icon and label must be not null.
   ///
   /// It is required to specify a color for both [backgroundColorStart} and [backgroundColorEnd].
   ///
@@ -133,9 +133,10 @@ class GradientBottomNavigationBar extends StatefulWidget {
         assert(backgroundColorStart != null),
         assert(backgroundColorEnd != null),
         assert(
-            items.every((BottomNavigationBarItem item) => item.title != null) ==
-                true,
-            'Every item must have a non-null title',),
+          items.every((BottomNavigationBarItem item) => item.label != null) ==
+              true,
+          'Every item must have a non-null label',
+        ),
         assert(0 <= currentIndex && currentIndex < items.length),
         assert(iconSize != null),
         type = type ??
@@ -144,7 +145,7 @@ class GradientBottomNavigationBar extends StatefulWidget {
                 : BottomNavigationBarType.shifting),
         super(key: key);
 
-  /// The interactive items laid out within the bottom navigation bar where each item has an icon and title.
+  /// The interactive items laid out within the bottom navigation bar where each item has an icon and label.
   final List<BottomNavigationBarItem> items;
 
   /// The callback that is called when a item is tapped.
@@ -271,7 +272,7 @@ class _BottomNavigationTile extends StatelessWidget {
               ),
             ),
             alignment: Alignment.bottomCenter,
-            child: item.title,
+            child: Text(item.label),
           ),
         ),
       ),
@@ -301,7 +302,7 @@ class _BottomNavigationTile extends StatelessWidget {
               fontSize: _kActiveFontSize,
               color: Colors.white,
             ),
-            child: item.title,
+            child: Text(item.label),
           ),
         ),
       ),
